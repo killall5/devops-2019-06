@@ -21,22 +21,22 @@ expect_success() {
 
 expect_fail() {
     set -e
-    ! res=$(echo $1 $2 $3 | $APP)"
+    ! res="$(echo $1 $2 $3 | $APP)"
     [ -z "$res" ]
-    ! res=$(echo $1 $3 $2 | $APP)"
+    ! res="$(echo $1 $3 $2 | $APP)"
+    [ -z "$res" ] || echo "'$res'"
+    ! res="$(echo $2 $1 $3 | $APP)"
     [ -z "$res" ]
-    ! res=$(echo $2 $1 $3 | $APP)"
+    ! res="$(echo $2 $3 $1 | $APP)"
     [ -z "$res" ]
-    ! res=$(echo $2 $3 $1 | $APP)"
+    ! res="$(echo $3 $1 $2 | $APP)"
     [ -z "$res" ]
-    ! res=$(echo $3 $1 $2 | $APP)"
-    [ -z "$res" ]
-    ! res=$(echo $3 $2 $1 | $APP)"
+    ! res="$(echo $3 $2 $1 | $APP)"
     [ -z "$res" ]
 }
 
 R="Обычный треугольник"
-I="Равносторонний треугольник"
+I="Равнобедренный треугольник"
 E="Равносторонний треугольник"
 
 
@@ -73,4 +73,6 @@ expect_fail -1 -2 -3
 expect_fail -1 0 -2
 expect_fail -1 a 0
 
-
+expect_fail 1 2 '3 4'
+expect_fail 1 2
+expect_fail '4 3 2 1'
