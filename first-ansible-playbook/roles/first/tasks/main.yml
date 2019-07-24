@@ -1,0 +1,43 @@
+- name: Ping the host
+  ping:
+
+- name: Ensure that apache2 present
+  apt:
+    name: apache2
+    state: present
+  become: yes
+
+- name: Ensure nginx removed
+  apt:
+    name: nginx
+    state: absent
+  become: yes
+
+- name: Nginx stop
+  systemd:
+    name: nginx
+    state: stopped
+  become: true
+
+- name: Ensure apache2 is running
+  systemd:
+    name: apache2
+    state: started
+  become: true
+
+- name: Add zabbix official repo key
+  apt_key:
+    url: http://repo.zabbix.com/zabbix-official-repo.key
+    state: present
+
+- name: Add zabbix official repo
+  apt_repository:
+    repo: deb http://repo.zabbix.com/zabbix/4.2/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main contrib non-free
+    state: present
+    filename: zabbix
+
+- name: Install zabbix-agent
+  apt:
+    name: zabbix-agent
+    state: present
+
